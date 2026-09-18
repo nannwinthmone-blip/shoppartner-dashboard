@@ -28,4 +28,9 @@ pnpm build
 
 The repository includes `.github/workflows/deploy-pages.yml`. Pushes to `main` build the static site and deploy it through GitHub Pages. The workflow sets the Vite base path for the repository automatically.
 
+After GitHub Pages is enabled for the `gh-pages` branch, use these separate entry points:
+
+- **Admin control panel:** `/shoppartner-dashboard/`
+- **Public customer storefront:** `/shoppartner-dashboard/store/`
+
 If Pages is not enabled yet, open repository **Settings → Pages** and set the source to **GitHub Actions** once, then rerun the workflow.

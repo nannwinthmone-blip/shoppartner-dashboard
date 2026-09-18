@@ -29,6 +29,11 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Build
         run: pnpm build
+      - name: Prepare direct route entry points
+        run: |
+          cp dist/public/index.html dist/public/404.html
+          mkdir -p dist/public/store
+          cp dist/public/index.html dist/public/store/index.html
       - name: Publish built site to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:

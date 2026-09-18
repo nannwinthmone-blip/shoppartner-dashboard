@@ -1,0 +1,35 @@
+import { useMemo, useState } from "react";
+import { ArrowRight, Check, ChevronDown, Heart, Menu, Search, ShoppingBag, Sparkles, Star, X } from "lucide-react";
+
+const products = [
+  { name: "Cloud knit cardigan", category: "Apparel", price: 84, emoji: "🧶", color: "blue", tag: "Best seller", detail: "Soft, cloud-like layers for slow mornings." },
+  { name: "Lemon drop candle", category: "Home", price: 32, emoji: "🕯️", color: "peach", tag: "Low stock", detail: "Bright citrus, warm wax, a little lift." },
+  { name: "Citrus studio mug", category: "Home", price: 28, emoji: "☕", color: "mint", tag: "New", detail: "A cheerful everyday mug for your desk." },
+  { name: "Sunday market tote", category: "Accessories", price: 42, emoji: "👜", color: "lilac", tag: "Editor's pick", detail: "Room for the market, the library, and more." },
+  { name: "Soft launch journal", category: "Stationery", price: 18, emoji: "📓", color: "yellow", tag: "Popular", detail: "A fresh page for plans, sketches, and notes." },
+  { name: "Studio linen shirt", category: "Apparel", price: 68, emoji: "👕", color: "sky", tag: "New", detail: "Relaxed linen made for bright afternoons." },
+];
+
+export default function Storefront() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [bag, setBag] = useState(0);
+  const [category, setCategory] = useState("All");
+  const [search, setSearch] = useState("");
+  const [toast, setToast] = useState("");
+  const categories = ["All", "Apparel", "Home", "Accessories", "Stationery"];
+  const visibleProducts = useMemo(() => products.filter((product) => (category === "All" || product.category === category) && `${product.name} ${product.detail}`.toLowerCase().includes(search.toLowerCase())), [category, search]);
+  const addToBag = (name: string) => { setBag((current) => current + 1); setToast(`${name} added to your bag`); window.setTimeout(() => setToast(""), 2600); };
+
+  return <div className="storefront">
+    <div className="store-announcement"><Sparkles size={13} /> Free shipping on orders over $75 <span>·</span> Shop small, shop bright.</div>
+    <header className="store-header"><a className="store-brand" href="/shoppartner-dashboard/store/"><span className="store-brand-mark">✦</span><span><strong>Sunny &amp; Found</strong><small>A ShopPartner store</small></span></a><nav className={`store-nav ${menuOpen ? "open" : ""}`}><a href="#shop" onClick={() => setMenuOpen(false)}>Shop</a><a href="#story" onClick={() => setMenuOpen(false)}>Our story</a><a href="#partners" onClick={() => setMenuOpen(false)}>Partner with us</a></nav><div className="store-actions"><label className="store-search"><Search size={17} /><input aria-label="Search products" placeholder="Search the shop" value={search} onChange={(event) => setSearch(event.target.value)} /></label><button className="store-icon-button" aria-label="Favorites"><Heart size={19} /></button><button className="store-bag" aria-label={`${bag} items in shopping bag`}><ShoppingBag size={18} /><span>{bag}</span></button><button className="store-menu" aria-label="Open menu" onClick={() => setMenuOpen((open) => !open)}>{menuOpen ? <X size={21} /> : <Menu size={21} />}</button></div></header>
+    <main>
+      <section className="store-hero"><div className="store-hero-copy"><span className="store-eyebrow"><Sparkles size={14} /> The fall edit is here</span><h1>Small things.<br /><em>Bright days.</em></h1><p>Thoughtful objects for ordinary rituals — made in small batches, chosen with care.</p><a className="store-primary-button" href="#shop">Shop the edit <ArrowRight size={16} /></a><div className="store-proof"><div className="store-avatars"><span>MC</span><span>AP</span><span>NW</span></div><span>Loved by <strong>2,400+ happy shoppers</strong></span><span className="store-stars"><Star size={12} fill="currentColor" /> 4.9</span></div></div><div className="store-hero-art"><div className="hero-orbit orbit-one">🍂</div><div className="hero-orbit orbit-two">🕯️</div><div className="hero-orbit orbit-three">🧶</div><div className="hero-card hero-card-back">☕</div><div className="hero-card hero-card-front">👜<small>Sunday mood</small></div><span className="hero-scribble">made for you ↗</span></div></section>
+      <section id="shop" className="store-shop"><div className="store-section-heading"><div><span className="store-eyebrow">Curated for the everyday</span><h2>Shop the little joys</h2></div><p>Original, useful, and a bit unexpected.</p></div><div className="store-toolbar"><div className="store-categories">{categories.map((item) => <button className={category === item ? "selected" : ""} key={item} onClick={() => setCategory(item)}>{item}</button>)}</div><button className="store-sort">Sort by <strong>Featured</strong> <ChevronDown size={14} /></button></div><div className="store-product-grid">{visibleProducts.map((product) => <article className="store-product-card" key={product.name}><div className={`store-product-art product-${product.color}`}><span className="product-tag">{product.tag}</span><button className="product-heart" aria-label={`Favorite ${product.name}`}><Heart size={16} /></button><div>{product.emoji}</div></div><div className="store-product-info"><div><span>{product.category}</span><h3>{product.name}</h3></div><strong>${product.price}.00</strong></div><p>{product.detail}</p><button className="store-add-button" onClick={() => addToBag(product.name)}>Add to bag <ArrowRight size={14} /></button></article>)}</div>{visibleProducts.length === 0 && <div className="store-empty"><span>🔎</span><strong>Nothing found yet</strong><p>Try another search or browse all of the edit.</p></div>}</section>
+      <section id="story" className="store-story"><div className="story-art"><span>☀️</span><span>🧺</span><span>🌿</span></div><div><span className="store-eyebrow">A softer way to shop</span><h2>Good objects, good energy.</h2><p>Sunny &amp; Found is a small-batch shop for the pieces that make an ordinary day feel a little more like yours. ShopPartner helps us share the edit with independent partners, so every completed customer sale supports a real maker-led business.</p><a className="store-text-link" href="#partners">Read our story <ArrowRight size={15} /></a></div></section>
+      <section id="partners" className="partner-strip"><div><span className="store-eyebrow">For creators &amp; community builders</span><h2>Love the edit? Share it your way.</h2><p>Join our partner program and earn commission on completed customer sales you help bring to the shop.</p></div><button className="store-dark-button" onClick={() => setToast("Partner applications open soon")}>Become a partner <ArrowRight size={15} /></button></section>
+    </main>
+    <footer className="store-footer"><a className="store-brand" href="#top"><span className="store-brand-mark">✦</span><span><strong>Sunny &amp; Found</strong><small>A ShopPartner store</small></span></a><span>© 2026 Sunny &amp; Found · Made for bright, ordinary days.</span><span>Powered by ShopPartner</span></footer>
+    {toast && <div className="store-toast"><Check size={15} />{toast}</div>}
+  </div>;
+}
